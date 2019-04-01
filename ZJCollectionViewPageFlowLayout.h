@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class ZJCollectionViewPageFlowLayout;
+@protocol ZJCollectionViewPageFlowLayoutProtocol <NSObject>
+
+- (void)ZJCollectionViewPageFlowLayout:(ZJCollectionViewPageFlowLayout *)layout scrolleToIndex:(NSInteger)index;
+
+@end
 @interface ZJCollectionViewPageFlowLayout : UICollectionViewFlowLayout
 
 - (instancetype)initWithSectionInset:(UIEdgeInsets)insets andMiniInterItemSpace:(CGFloat)miniInterItemSpace andItemSize:(CGSize)itemSize;

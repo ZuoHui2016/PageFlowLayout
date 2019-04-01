@@ -13,6 +13,8 @@
 @property (nonatomic, assign) CGFloat miniInterItemSpace;
 @property (nonatomic, assign) CGSize eachItemSize;
 @property (nonatomic, assign) CGPoint lastOffset;/**<记录上次滑动停止时contentOffset值*/
+@property (nonatomic, assign) NSInteger lastIndex;
+@property (nonatomic, weak) id delegate;
 
 @end
 @implementation  ZJCollectionViewPageFlowLayout
@@ -52,9 +54,9 @@
     self.sectionInset = self.sectionInsets;
     self.itemSize = self.eachItemSize;
     self.minimumLineSpacing = self.miniInterItemSpace;
+    self.delegate = self.collectionView.delegate;
     self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
 }
-
 
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity
 {
@@ -80,6 +82,22 @@
     else
     {
         proposedContentOffset = CGPointMake(_lastOffset.x, _lastOffset.y);
+    }
+    
+     NSArray  *arr =   [super layoutAttributesForElementsInRect:CGRectMake(self.collectionView.contentOffset.x, 0, self.collectionView.frame.size.width, self.collectionView.frame.size.height)];
+    NSInteger  index = 0;
+    if (direction)
+    {
+        UICollectionViewLayoutAttributes  *Attributes  = arr.lastObject;
+        index =  Attributes.indexPath.row;
+    }else
+    {
+        UICollectionViewLayoutAttributes  *Attributes  = arr.firstObject;
+        index =  Attributes.indexPath.row;
+    }
+    if ([self.delegate respondsToSelector:@selector(ZJCollectionViewPageFlowLayout:scrolleToIndex:)])
+    {
+        [self.delegate ZJCollectionViewPageFlowLayout:self scrolleToIndex:index];
     }
     _lastOffset.x = proposedContentOffset.x;
     return proposedContentOffset;
